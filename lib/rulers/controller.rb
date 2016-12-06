@@ -28,8 +28,7 @@ module Rulers
 
     def view_vars
       self.instance_variables.inject({}) do |memo, var|
-        memo[var] = self.instance_variable_get(var)
-        memo
+        memo.merge(var => self.instance_variable_get(var))
       end
     end
   end
