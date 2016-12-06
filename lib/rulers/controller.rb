@@ -8,7 +8,7 @@ module Rulers
       @env = env
     end
 
-    def render(view_name, locals = {})
+    def render(view_name)
       filename = File.join(
         'app',
         'views',
@@ -18,12 +18,19 @@ module Rulers
       template = File.read(filename)
 
       eruby = Erubis::Eruby.new(template)
-      eruby.result(locals.merge(env: env))
+      eruby.result(view_vars)
     end
 
     def controller_name
       klass = self.class.to_s.gsub(/Controller$/, '')
       Rulers.to_underscore(klass)
+    end
+
+    def view_vars
+      self.instance_variables.inject({}) do |memo, var|
+        memo[var] = self.instance_variable_get(var)
+        memo
+      end
     end
   end
 end
